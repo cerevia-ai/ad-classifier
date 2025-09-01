@@ -3,7 +3,6 @@ import pandas as pd
 import joblib
 import numpy as np
 import os
-import matplotlib.pyplot as plt
 
 # -----------------------------
 # 1. Dashboard Title
