@@ -47,7 +47,12 @@ def user_input_features():
     gender = st.sidebar.radio("Gender", ["Female", "Male"])
     ptgender = 2 if gender == "Female" else 1
 
-    ethnicity = st.sidebar.selectbox("Ethnicity (PTETHCAT)", [1, 2], format_func=lambda x: "Hispanic" if x == 1 else "Not Hispanic")
+    ethnicity = st.sidebar.selectbox(
+    "Ethnicity (PTETHCAT)",
+    [1, 2],
+    index=1,  # 👈 This sets the default to '2' (Not Hispanic)
+    format_func=lambda x: "Hispanic" if x == 1 else "Not Hispanic")
+
     race = st.sidebar.selectbox("Race (PTRACCAT)", [1, 2, 3, 4, 5, 6, 7],
                                 format_func=lambda x: {
                                     1: "Caucasian",
@@ -108,6 +113,4 @@ for i, (cls, prob) in enumerate(proba_dict.items()):
 # -----------------------------
 # 6. SHAP Explainability
 # -----------------------------
-"""
-to be installed later.
-"""
+# to be installed later.
