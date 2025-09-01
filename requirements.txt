@@ -1,20 +1,15 @@
-# Core data handling
+# Core
+numpy==1.26.4
 pandas==2.2.3
-numpy>=1.19.0
+scipy==1.11.4
 
-# Machine learning
-scikit-learn==1.5.1    # ✅ Latest stable version (as of June 2024)
-xgboost
+# ML
+scikit-learn==1.5.1
+xgboost==2.1.1
 joblib==1.3.2
 
-# Explainability
-shap==0.42.1
-lime
+# Visualization
 matplotlib==3.8.1
-seaborn==0.12.2
 
-# Dashboard / web
+# App
 streamlit==1.29.0
-
-# Optional for reproducibility and utilities
-scipy==1.11.1
