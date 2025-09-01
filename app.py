@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
-import shap
 import os
 import matplotlib.pyplot as plt
 
