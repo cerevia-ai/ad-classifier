@@ -11,14 +11,6 @@ from sklearn.exceptions import InconsistentVersionWarning
 warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 
 # -----------------------------
-# 0. Immediate Loading Feedback
-# -----------------------------
-st.set_page_config(page_title="Cognitive Status Classifier", layout="wide")
-st.title("⏳ Loading Cognitive Status Classifier...")
-st.info("Initializing model and preprocessor — this may take up to 60 seconds on first load.")
-st.caption("ℹ️ _Subsequent loads will be much faster._")
-
-# -----------------------------
 # 1. Load Model & Preprocessor
 # -----------------------------
 @st.cache_resource
