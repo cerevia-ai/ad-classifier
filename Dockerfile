@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose Streamlit port
-EXPOSE 8080
+EXPOSE 8000
 
 # Streamlit headless
 ENV STREAMLIT_SERVER_HEADLESS=true
@@ -31,4 +31,4 @@ ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 ENV STREAMLIT_SERVER_PORT=8000   
 ENV PYTHONUNBUFFERED=1
 
-CMD ["streamlit", "run", "ad_app.py", "--server.address=0.0.0.0", "--server.port=8080"]
+CMD ["streamlit", "run", "ad_app.py", "--server.address=0.0.0.0", "--server.port=8000"]
