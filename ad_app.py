@@ -3,31 +3,47 @@ import pandas as pd
 import joblib
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+import warnings
+from sklearn.exceptions import InconsistentVersionWarning
+
+# Suppress scikit-learn version warnings (optional)
+warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 
 # -----------------------------
-# 1. Dashboard Title
+# 0. Immediate Loading Feedback
 # -----------------------------
 st.set_page_config(page_title="Cognitive Status Classifier", layout="wide")
-st.title("Cognitive Status Classification (CN, MCI, AD)")
-st.markdown("""
-This tool predicts cognitive status using clinical and cognitive data.
-Enter patient features below to get a prediction with confidence and explanation.
-""")
+st.title("⏳ Loading Cognitive Status Classifier...")
+st.info("Initializing model and preprocessor — this may take up to 60 seconds on first load.")
+st.caption("ℹ️ _Subsequent loads will be much faster._")
 
 # -----------------------------
-# 2. Load Model & Preprocessor
+# 1. Load Model & Preprocessor
 # -----------------------------
 @st.cache_resource
 def load_model_and_preprocessor():
     try:
-        model = joblib.load("XGBoost.joblib")
-        preprocessor = joblib.load("scaler_encoder.pkl")
+        with st.spinner("🧠 Loading XGBoost model..."):
+            model = joblib.load("XGBoost.joblib")
+        with st.spinner("⚙️ Loading preprocessor..."):
+            preprocessor = joblib.load("scaler_encoder.pkl")
         return model, preprocessor
     except Exception as e:
-        st.error(f"Error loading model or preprocessor:\n{e}")
+        st.error(f"🚨 Error loading model or preprocessor:\n\n`{e}`")
         st.stop()
 
+# Load model — this will show spinners and messages
 model, preprocessor = load_model_and_preprocessor()
+
+# -----------------------------
+# 2. Show Main UI Only After Load
+# -----------------------------
+st.title("🧠 Cognitive Status Classification (CN, MCI, AD)")
+st.markdown("""
+This tool predicts cognitive status using clinical and cognitive data.
+Enter patient features below to get a prediction with confidence and explanation.
+""")
 
 # -----------------------------
 # 3. User Input
@@ -46,21 +62,25 @@ def user_input_features():
     ptgender = 2 if gender == "Female" else 1
 
     ethnicity = st.sidebar.selectbox(
-    "Ethnicity (PTETHCAT)",
-    [1, 2],
-    index=1,  # 👈 This sets the default to '2' (Not Hispanic)
-    format_func=lambda x: "Hispanic" if x == 1 else "Not Hispanic")
+        "Ethnicity (PTETHCAT)",
+        [1, 2],
+        index=1,
+        format_func=lambda x: "Hispanic" if x == 1 else "Not Hispanic"
+    )
 
-    race = st.sidebar.selectbox("Race (PTRACCAT)", [1, 2, 3, 4, 5, 6, 7],
-                                format_func=lambda x: {
-                                    1: "Caucasian",
-                                    2: "African American",
-                                    3: "Asian",
-                                    4: "Pacific Islander",
-                                    5: "American Indian",
-                                    6: "More than one race",
-                                    7: "Unknown"
-                                }[x])
+    race = st.sidebar.selectbox(
+        "Race (PTRACCAT)",
+        [1, 2, 3, 4, 5, 6, 7],
+        format_func=lambda x: {
+            1: "Caucasian",
+            2: "African American",
+            3: "Asian",
+            4: "Pacific Islander",
+            5: "American Indian",
+            6: "More than one race",
+            7: "Unknown"
+        }[x]
+    )
 
     data = {
         "AGE": [age],
@@ -83,7 +103,7 @@ input_df = user_input_features()
 try:
     X_processed = preprocessor.transform(input_df)
 except Exception as e:
-    st.error("Error during preprocessing. Check input or preprocessor compatibility.")
+    st.error("🚨 Error during preprocessing. Check input or preprocessor compatibility.")
     st.stop()
 
 # -----------------------------
@@ -108,7 +128,8 @@ cols = st.columns(3)
 for i, (cls, prob) in enumerate(proba_dict.items()):
     cols[i].metric(label=cls, value=f"{prob:.2%}")
 
-# -----------------------------
-# 6. SHAP Explainability
-# -----------------------------
-# to be installed later.
+def add_footer():
+    st.markdown("---")
+    st.caption("For research and planning use only. Not a medical device.")
+
+add_footer()
